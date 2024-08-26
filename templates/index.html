@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Todo App</title>
+{% endblock %}
+
+{% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div id="flash-messages">
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+<div class="content">
+<h1>Todo App</h1>
+{% if tasks|length < 1 %}
+<h3> Create a Task</h3>
+{% else %}
+<table class="table">
+    <tr>
+        <th>Task</th>
+        <th>Added</th>
+        <th>Actions</th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+        <td>{{task.content}}</td>
+        <td>{{task.date_created.date()}}</td>
+        <td>
+            <a href="/delete/{{task.id}}" >Delete</a>
+            <br>
+            <a href="/update/{{task.id}}" >Update</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endif %}
+<form action="/" method="POST">
+
+<div class="row">
+<div class="mb-3 col-md-6 ">
+<input type="text" class="form-control" id="content" name="content" placeholder="Start typing to create a task...">
+</div>
+
+<div class="mb-3 col-md-6">
+<input type="submit" class="btn btn-primary" id="submit" value="Add Task" style="width: 265px;">
+</div>
+</div>
+
+</form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            $('#flash-messages').fadeOut('slow');
+        }, 5000); // 5000ms = 5 seconds
+    });
+</script>
+
+{% endblock %}
